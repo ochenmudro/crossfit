@@ -1,5 +1,6 @@
 package com.darya.crossfit.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,14 @@ import java.util.Map;
 @Service
 public class CrossfitService {
     private final RestTemplate restTemplate;
+    @Value("${service.url}")
+    private String url;
 
     public CrossfitService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public String client() throws IOException {
-        String url = "http://localhost:8081/v1/clients/";
+    public String client(Integer clientId) throws IOException {
 
         String urlTemplate = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("clientId", "{clientId}")
@@ -27,7 +29,7 @@ public class CrossfitService {
                 .toUriString();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("clientId", 2);
+        params.put("clientId", clientId);
 
         HttpEntity<String> response = restTemplate.exchange(
                 urlTemplate,
